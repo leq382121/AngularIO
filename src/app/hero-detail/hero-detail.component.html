@@ -1,0 +1,23 @@
+
+
+<!-- <app-hero-detail [hero]="selectedHero"></app-hero-detail> -->
+
+<div *ngIf="hero">
+  <h2>The Hero: {{hero.name | uppercase}} </h2>
+
+  <label> name:
+    <input [(ngModel)]="hero.name" placeholder="name"/>
+  </label>
+
+  <label> ID: <span>{{hero.id}}</span></label>
+
+<!--
+  Summary
+    The Tour of Heroes app displays a list of heroes in a Master/Detail view.
+    The user can select a hero and see that hero's details. LN.17
+    You used *ngFor to display a list. LN.15
+    You used *ngIf to conditionally include or exclude a block of HTML. LN.24
+    You can toggle a CSS style class with a class binding. LN.16
+  -->
+</div>
+
