@@ -107,11 +107,32 @@ export class HeroService {
       tap(_ => this.log(`Deleting Hero w/ name = ${name}, id=${id}`)),
       catchError(this.handleError<Hero>(`deleteHero`))
     );
+
+    // it calls HttpClient.delete.
+    // the URL is the heroes resource URL plus the id of the hero to delete
+    // you don't send data as you did with put and post.
+    // you still send the httpOptions.
+  }
+
+  searchHeroes(term: string): Observable<Hero[]> {
+    if(!term.trim()){
+      // if no search term, return emptu hero array
+      return of([]);
+    }
+
+    return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).pipe(
+      tap(_ => this.log(`hero's found by using term ${term}`)),
+      catchError(this.handleError<Hero[]>('searchHeroes', []))
+    );
+
+    // The method returns immediately with an empty array if there
+    // is no search term. The rest of it closely resembles getHeroes().
+    // The only significant difference is the URL, which includes a query
+    // string with the search term.
   }
 
   // This is a typical "service-in-service" scenario: you inject the MessageService
   // into the HeroService which is injected into the HeroesComponent.
-
   constructor(
     private http: HttpClient,
     private messageService: MessageService
