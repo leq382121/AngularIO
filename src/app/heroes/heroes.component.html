@@ -17,7 +17,19 @@
       {{hero.name}}
     </a>
   </li>
+  <button class="delete" title="delete hero" (click)="delete(hero)">x</button>
 </ul>
+
+<div>
+  <label> New Hero name:
+    <input #heroName />
+  </label>
+
+  <!-- click passes input value to add() and then clears the input -->
+  <button (click)="add(heroName.value); heroName.value=''">
+    add
+  </button>
+</div>
 
 
 <!--

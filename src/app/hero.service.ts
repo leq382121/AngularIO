@@ -7,6 +7,10 @@ import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -72,6 +76,37 @@ export class HeroService {
     // console.log('herojai: ', HEROES);
     // this.messageService.add(`HeroService: fetched hero id=${id}`);
     // return of(HEROES.find(hero => hero.id === id));
+  }
+
+  updateHero(hero: Hero): Observable<any> {
+    return this.http.put(this.heroesUrl, hero, httpOptions)
+    // http.put(the URL, the data to update (the modified hero in this case), options)
+      .pipe(
+        tap(_ => this.log(`updated hero id=${hero.id}`)),
+        catchError(this.handleError<any>('updateHero'))
+      );
+  }
+
+  addHero(hero: Hero): Observable<any> {
+    return this.http.post<Hero>(this.heroesUrl, hero, httpOptions).pipe(
+      tap((newHero: Hero) => this.log(`posting hero w/ name=${name} and id=${newHero.id}`)),
+      catchError(this.handleError<Hero>(`addHero`)) // (`addHero`) is a catched function name
+
+      // it calls HttpClient.post() instead of put().
+
+      // it expects the server to generate an id for the new hero,
+      // which it returns in the Observable<Hero> to the caller.
+    );
+  }
+
+  deleteHero(hero: Hero): Observable<any> {
+    const id = typeof hero === 'number' ? hero : hero.id;
+    const url = `${this.heroesUrl}/${id}`;
+
+    return this.http.delete<Hero>(url, httpOptions).pipe(
+      tap(_ => this.log(`Deleting Hero w/ name = ${name}, id=${id}`)),
+      catchError(this.handleError<Hero>(`deleteHero`))
+    );
   }
 
   // This is a typical "service-in-service" scenario: you inject the MessageService
